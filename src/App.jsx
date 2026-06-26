@@ -1,121 +1,92 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+const ACCESS_KEY = import.meta.env.VITE_APP_ACCESS_KEY;
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  //Variables to track:
+
+  // holds the current cat data object from the API
+  const [currCat, setCurrCat] = useState(null);
+  // Tracks if the network is currently fetching data
+  const [loading, setLoading] = useState(null);
+  // holds banned attribuites
+  const [banList, setBanList] = useState([]);
+  // history
+  const [history, setHistory] = useState([]);
+
+//asynchronous function for button that creates new API 
+  const fetchRandomCat = async () => {
+    setLoading(true);
+    try{
+      // fetch a random cat with breed info attached
+      const response = await fetch(`https://thecatapi.com{import.meta.env.VITE_APP_ACCESS_KEY}`);
+      const data = await response.json();
+      
+      //The cat API return an array containing one object: [{url: '...', breeds: [...]}]
+      if(data && data.length > 0){
+        const catData = data[0];
+
+        //Check ban list filter
+        const breedName = catData.breeds[0]?.name;
+        if (banList.includes(breedName)){
+          //If the breed is banned, automatically fetch a 
+        }
+        //if it passes the ban list, save it to diplay it
+        setCurrCat(catData);
+      }
+    } catch(error){
+      console.error("Error fetching the dog data:", error);
+    }
+    setLoading(false);
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app-container">
+      {/* Main Discover Area */}
+      <div className="discover-section" >
+        <h1> 🐾 Veni Vici! Cat Explorer 🐾 </h1>
+        <p>Discover new cats, ban what you don't want to see!</p>
 
-      <div className="ticks"></div>
+        {/* Conditional Rendering: show data if currDog exists*/}
+        {currCat ? (
+          <div className="cat-card"> 
+            {/* img displaying per API call */}
+              <img 
+                src={currCat.url}
+                alt="Random Breed"
+              />
+            {/* Display 4 attributes as clickable buttons */}
+            <div className="attributes-container"> 
+              <button onClick={() => addToBanList(currCat.breeds[0]?.name)} className="attr-btn">
+                Breed: {currCat.breeds[0]?.name || "Unknown"}
+              </button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+              <button onClick={() => addToBanList(currCat.breeds[0]?.weight)} className="attr-btn">
+                Breed: {currCat.breeds[0]?.weight || "Unknown"}
+              </button>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+              <button onClick={() => addToBanList(currCat.breeds[0]?.location)} className="attr-btn">
+                Breed: {currCat.breeds[0]?.location || "Unknown"}
+              </button>
+
+              <button onClick={() => addToBanList(currCat.breeds[0]?.age)} className="attr-btn">
+                Breed: {currCat.breeds[0]?.age || "Unknown"}
+              </button>
+
+            </div>
+          </div>
+        ):(
+          <div> 
+            <p> Click the button below to start your discovery journey!</p>
+          </div>
+        )}
+
+        <button onClick={fetchRandomCat} disabled={loading} >🔄 Discover New Cat!</button>
+
+        {/* Right Column: Ban List view */}
+      </div>
+    </div>
   )
 }
 
