@@ -1,0 +1,61 @@
+.app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  background-color: #fcfcfc;
+  overflow: hidden;
+}
+
+/* Sidebar Column Layouts */
+.history-section, .ban-list-section {
+  width: 250px;
+  background-color: #f7f9fa;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-section {
+  border-right: 1px solid #e1e8ed;
+}
+
+.ban-list-section {
+  border-left: 1px solid #e1e8ed;
+}
+
+/* Center Interactive Board Workspace */
+.discover-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.section-subtitle, .main-subtitle {
+  font-size: 13px;
+  color: #657786;
+  margin-top: -5px;
+  margin-bottom: 15px;
+}
+
+/* Lists layout */
+.history-list, .ban-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.empty-text {
+  font-size: 13px;
+  color: #aab8c2;
+  text-align: center;
+  font-style: italic;
+  margin-top: 20px;
+}
